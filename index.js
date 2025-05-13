@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const axios = require("axios");
 const mongoose = require("mongoose");
@@ -7,13 +9,13 @@ const app = express();
 app.use(express.json());
 
 // Shopify API credentials
-const SHOPIFY_STORE = "<your_store_name>";
-const ACCESS_TOKEN = "<developed_app_access_token>";
-const WEBHOOK_VERSION = "<developed_app_webhook_version>";
+const SHOPIFY_STORE = process.env.SHOPIFY_STORE;
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const WEBHOOK_VERSION = process.env.WEBHOOK_VERSION;
 
 // Connect to MongoDB (for storing previous metafield values)
 mongoose.connect(
-    "mongodb+srv://wac:gdlTgCW1Ig1fyqA6@chalkless.oh7np7l.mongodb.net/?retryWrites=true&w=majority&appName=Chalkless",
+    process.env.MONGODB_URI,
 ).then(() => console.log("Successfully Connected"))
     .catch((err) => console.error("Error while connecting DB: ", err));
 
@@ -75,16 +77,16 @@ const getMetafields = async (companyId, companyGid) => {
 // Function to send email notifications
 const sendEmail = async (changedMetafields) => {
     const transporter = nodemailer.createTransport({
-        service: "<mail_service_name>",
+        service: process.env.MAIL_SERVICE,
         auth: {
-            user: "<from_email>",
-            pass: "<password>",
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS,
         },
     });
 
     const mailOptions = {
-        from: "<from_email>",
-        to: "<to_email>",
+        from: process.env.MAIL_FROM,
+        to: process.env.MAIL_TO,
         subject: "Company Metafield Updated",
         text: `The following metafields were updated:\n\n${JSON.stringify(changedMetafields, null, 2)}`,
     };
