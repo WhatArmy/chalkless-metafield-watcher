@@ -76,12 +76,14 @@ const getMetafields = async (companyId, companyGid) => {
 
 // Function to send email notifications
 const sendEmail = async (changedMetafields) => {
+    // Looking to send emails in production? Check out our Email API/SMTP product!
     const transporter = nodemailer.createTransport({
-        service: process.env.MAIL_SERVICE,
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
         auth: {
-            user: process.env.MAIL_USER,
-            pass: process.env.MAIL_PASS,
-        },
+            user: "3a9ccd5eea2b38",
+            pass: "867cbb2e1fc37a"
+        }
     });
 
     const mailOptions = {
